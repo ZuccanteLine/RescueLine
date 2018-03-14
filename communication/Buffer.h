@@ -5,14 +5,12 @@
 #ifndef RESCUELINE_BUFFER_H
 #define RESCUELINE_BUFFER_H
 
-typedef uint8_t byte;
-
 class Buffer {
 private:
-    byte source;
-    byte type;
-    byte dataSize;
-    byte *data;
+    uint8_t source;
+    uint8_t type;
+    uint8_t dataSize;
+    uint8_t *data;
 
 //    static void b2buffer(char source, char type, char size, char *data, char *buffer);
 //    static Buffer B2Buffer(char *buffer);
@@ -21,22 +19,22 @@ public:
     enum source_enum{RASPBERRY, ARDUINO};
     enum type_enum{MOTORS, IMU};
 
-    explicit Buffer(byte *buffer);
+    explicit Buffer(uint8_t *buffer);
     explicit Buffer();
     virtual ~Buffer();
 
-    byte getSource() const;
-    byte getType() const;
-    byte getDataSize() const;
-    byte length();
-    void getData(byte *&data);
-    void cloneData(byte *&data);
+    uint8_t getSource() const;
+    uint8_t getType() const;
+    uint8_t getDataSize() const;
+    uint8_t length();
+    void getData(uint8_t *&data);
+    void cloneData(uint8_t *&data);
 
-    void setSource(byte source);
-    void setType(byte type);
-    void setData(byte *data, byte size);
+    void setSource(uint8_t source);
+    void setType(uint8_t type);
+    void setData(uint8_t *data, uint8_t size);
 
-    void toBuffer(byte *&buffer);
+    void toBuffer(uint8_t *&buffer);
 };
 
 

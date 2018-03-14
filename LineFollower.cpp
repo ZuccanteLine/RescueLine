@@ -3,3 +3,106 @@
 //
 
 #include "LineFollower.h"
+
+void LineFollower::setImage(cv::Mat image) {
+    LineFollower::image = image.clone();
+}
+
+int LineFollower::getThresh() const {
+    return thresh;
+}
+
+int LineFollower::getErosion_type() const {
+    return erosion_type;
+}
+
+int LineFollower::getErosion_size() const {
+    return erosion_size;
+}
+
+int LineFollower::getDilation_type() const {
+    return dilation_type;
+}
+
+int LineFollower::getDilation_size() const {
+    return dilation_size;
+}
+
+void LineFollower::setThresh(int thresh) {
+    LineFollower::thresh = thresh;
+}
+
+void LineFollower::setErosion_type(int erosion_type) {
+    LineFollower::erosion_type = erosion_type;
+    erodeKernel = cv::getStructuringElement(erosion_type, cv::Size(2 * erosion_size + 1, 2 * erosion_size + 1), cv::Point(erosion_size, erosion_size));
+}
+
+void LineFollower::setErosion_size(int erosion_size) {
+    LineFollower::erosion_size = erosion_size;
+    erodeKernel = cv::getStructuringElement(erosion_type, cv::Size(2 * erosion_size + 1, 2 * erosion_size + 1), cv::Point(erosion_size, erosion_size));
+}
+
+void LineFollower::setDilation_type(int dilation_type) {
+    LineFollower::dilation_type = dilation_type;
+    dilateKernel = cv::getStructuringElement(dilation_type, cv::Size(2 * dilation_size + 1, 2 * dilation_size + 1), cv::Point(dilation_size, dilation_size));
+}
+
+void LineFollower::setDilation_size(int dilation_size) {
+    LineFollower::dilation_size = dilation_size;
+    dilateKernel = cv::getStructuringElement(dilation_type, cv::Size(2 * dilation_size + 1, 2 * dilation_size + 1), cv::Point(dilation_size, dilation_size));
+}
+
+LineFollower::LineFollower() {
+
+}
+
+int16_t LineFollower::getRight() const {
+    return right;
+}
+
+int16_t LineFollower::getLeft() const {
+    return left;
+}
+
+
+void LineFollower::process_image() {
+//    cv::Mat processed = Mat(image, rettangolo); // estrapolo solo l'area interessata
+    cv::cvtColor(image, processed_image, CV_BGR2GRAY); // converto in bianco e nero
+    cv::GaussianBlur(processed_image, processed_image, cv::Size(9, 9), 2, 2); // sfoco leggermente l'immagine per ridurre gli "zig e zag"
+    cv::threshold(processed_image, processed_image, thresh, 255, 0); // converto tutto in bianco o nero
+    cv::erode(processed_image, processed_image, erodeKernel); // elimino le "impurità"
+    cv::dilate(processed_image, processed_image, dilateKernel); // ri espando l'immagine
+}
+
+void LineFollower::add_analyzation_area(cv::Rect area, int coefficient) {
+    analyzation_areas.push_back(cv::Rect(area));
+    coefficients.push_back(coefficient);
+}
+
+void LineFollower::extract_contours() {
+    all_contours.clear();
+    for(cv::Rect area : analyzation_areas){
+        std::vector<std::vector<cv::Point>> contours;
+        cannied_areas.push_back(cv::Mat(processed_image, area).clone());
+        cv::Canny(cannied_areas.back(), cannied_areas.back(), thresh, thresh * 2, 3);
+        cv::findContours(cannied_areas.back(), contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+        all_contours.push_back(contours);
+    }
+//    for(auto contours : all_contours){
+//        for(auto contour : contours){
+//
+//        }
+//    }
+}
+
+void LineFollower::process1() {
+    process_image();
+    extract_contours();
+//    for(cv::Rect area : analyzation_areas){
+//        std::vector<std::vector<cv::Point>> contours;
+//        cv::Mat cannied_image(processed_image, area);
+//        cv::Canny(cannied_image, cannied_image, thresh, thresh*2, 3);
+//        cv::findContours(cannied_image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+//    }
+//    cv::imshow("Ciao1", processed_image);
+}

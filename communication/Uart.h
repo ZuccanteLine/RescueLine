@@ -11,13 +11,11 @@
 #include <fcntl.h>
 #include <string>
 
-typedef uint8_t byte;
-
 class Uart {
 public:
     explicit Uart(std::string device);
-    bool read(byte *buffer);
-    bool write(byte *buffer);
+    bool read(uint8_t *buffer);
+    bool write(uint8_t *buffer);
 private:
     std::string device;
     struct termios toptions;

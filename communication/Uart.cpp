@@ -26,7 +26,7 @@ Uart::Uart(std::string device){
     tcsetattr(file, TCSANOW, &toptions);
 }
 
-bool Uart::read(byte *buffer) {
+bool Uart::read(uint8_t *buffer) {
     
     return true;
 }

@@ -76,7 +76,7 @@ private:
     PyObject *closef;
     PyObject *read;
     PyObject *write;
-    PyObject *lcd_write;
+//    PyObject *lcd_write;
 
     PyObject *readargs = PyTuple_New(1);
     PyObject *writeargs = PyTuple_New(2);
