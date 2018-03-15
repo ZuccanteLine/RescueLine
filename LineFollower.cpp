@@ -2,10 +2,13 @@
 // Created by davide on 12/03/18.
 //
 
+#include <iostream>
 #include "LineFollower.h"
 
 void LineFollower::setImage(cv::Mat image) {
     LineFollower::image = image.clone();
+    rows = image.rows;
+    cols = image.cols;
 }
 
 int LineFollower::getThresh() const {
@@ -81,6 +84,7 @@ void LineFollower::add_analyzation_area(cv::Rect area, int coefficient) {
 
 void LineFollower::extract_contours() {
     all_contours.clear();
+    cannied_areas.clear();
     for(cv::Rect area : analyzation_areas){
         std::vector<std::vector<cv::Point>> contours;
         cannied_areas.push_back(cv::Mat(processed_image, area).clone());
@@ -95,7 +99,7 @@ void LineFollower::extract_contours() {
 //    }
 }
 
-void LineFollower::process1() {
+void LineFollower::process_debug1() {
     process_image();
     extract_contours();
 //    for(cv::Rect area : analyzation_areas){
@@ -105,4 +109,43 @@ void LineFollower::process1() {
 //        cv::findContours(cannied_image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 //    }
 //    cv::imshow("Ciao1", processed_image);
+}
+
+void LineFollower::find_black_average() {
+    average_points.clear();
+    for(cv::Rect area : analyzation_areas) {
+        cv::Mat matTmp = cv::Mat(processed_image, area).clone();
+        long long int average_x = 0, average_y = 0;
+        int counter = 0;
+        for (int x = 0; x <= matTmp.cols; x++) {
+            for (int y = 0; y <= matTmp.rows; y++) {
+                if (matTmp.at<uchar>(y, x) == 0) {
+                    average_x += x;
+                    average_y += y;
+                    counter++;
+                }
+            }
+        }
+        average_points.push_back(cv::Point(average_x/counter, average_y/counter));
+    }
+}
+
+void LineFollower::process_average_black() {
+    process_image();
+    find_black_average();
+
+    right=0; left=0;
+    double tmp;
+    for(int i=0; i<analyzation_areas.size(); i++){
+        tmp = average_points.at(i).x;
+//        std::cout << tmp << "\t";
+        tmp = (tmp/cols)*255;
+//        std::cout << tmp << "\t";
+        tmp = (tmp/100)*coefficients.at(i);
+//        std::cout << tmp << "\t";
+        tmp = tmp/analyzation_areas.size();
+//        std::cout << tmp << "\n";
+        right += ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
+        left += 255 - ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
+    }
 }

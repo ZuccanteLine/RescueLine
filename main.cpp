@@ -25,46 +25,33 @@ int main() {
     camera.set(CV_CAP_PROP_FRAME_WIDTH,CAMERA_WIDTH);
     camera.set(CV_CAP_PROP_FRAME_HEIGHT,CAMERA_HEIGHT);
 
-    //    lineFollower.set...;
-    lineFollower.add_analyzation_area(cv::Rect(0,0,640,480), 1);
+    lineFollower.add_analyzation_area(cv::Rect(0,0,640,480), 100);
 
     while(cv::waitKey(1)){
 //        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         camera.read(image);
         lineFollower.setImage(image);
-        lineFollower.process1();
-        for(auto contours : lineFollower.get_all_contours()){
-            try{
-                cv::drawContours(image, contours, 0, cv::Scalar(0,0,255), 3, 8, NULL, 0);
-//                std::cout << "Un contorno" << std::endl;
-            } catch (std::exception ex){
-                std::cout << "Eccezione :)" << std::endl;
-            }
-        }
-        cv::imshow("Image", image);
-        cv::imshow("Processed image", lineFollower.get_processed_image());
+        lineFollower.process_average_black();
+
+        //debug
+        std::cout << lineFollower.getRight() << "\t";
+        std::cout << lineFollower.getLeft() << "\n";
+        cv::circle(image, lineFollower.get_average_point().at(0), 3, cv::Scalar(0,0,255), 3, cv::LINE_8);
+        cv::imshow("Ciaoooo", image);
+//        lineFollower.process_debug1();
+//        for(auto contours : lineFollower.get_all_contours()){
+//            for(int i=0; i<contours.size(); i++) {
+//                try {
+//                    cv::drawContours(image, contours, i, cv::Scalar(0, 0, 255), 3, 8, NULL, 0);
+//                } catch (std::exception ex) {
+//                    std::cout << "Eccezione :)" << std::endl;
+//                }
+//            }
+//        }
+//        cv::imshow("Cannied", lineFollower.get_cannied_areas().at(0));
+//        cv::imshow("Image", image);
+//        cv::imshow("Processed image", lineFollower.get_processed_image());
     }
 
     return 0;
 }
-
-/*
-using std::cout;
-using std::endl;
-
-int main(){
-    Buffer buffer;
-    buffer.setSource(Buffer::source_enum::ARDUINO);
-    buffer.setType(Buffer::type_enum::MOTORS);
-    uint8_t *ciao;
-    ciao = new uint8_t[3]; ciao[0]=111; ciao[1]=111;
-    buffer.setData(ciao, 3);
-
-    uint8_t *hello;
-    buffer.toBuffer(hello);
-    for(int i=0; i<buffer.length(); i++){
-        cout << i << "-" << (int)hello[i] << endl;
-    }
-
-    return 0;
-}*/
