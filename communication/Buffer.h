@@ -16,8 +16,8 @@ private:
 //    static Buffer B2Buffer(char *buffer);
 
 public:
-    enum source_enum{RASPBERRY, ARDUINO};
-    enum type_enum{MOTORS, IMU};
+    enum source_enum{SOURCE_RASPBERRY, SOURCE_ARDUINO};
+    enum type_enum{TYPE_MOTORS, TYPE_IMU};
 
     explicit Buffer(uint8_t *buffer);
     explicit Buffer();

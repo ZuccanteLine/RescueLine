@@ -5,6 +5,7 @@
 #ifndef RESCUELINE_UART_H
 #define RESCUELINE_UART_H
 
+#define BUFFER_FIXED_DATA_SIZE 4
 
 #include <termios.h>
 #include <printf.h>
@@ -14,8 +15,8 @@
 class Uart {
 public:
     explicit Uart(std::string device);
-    bool read(uint8_t *buffer);
-    bool write(uint8_t *buffer);
+    bool _read(uint8_t *buffer, int size);
+    bool _write(uint8_t *buffer, int size);
 private:
     std::string device;
     struct termios toptions;

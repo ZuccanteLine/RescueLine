@@ -115,6 +115,7 @@ void LineFollower::find_black_average() {
     average_points.clear();
     for(cv::Rect area : analyzation_areas) {
         cv::Mat matTmp = cv::Mat(processed_image, area).clone();
+//        cv::imshow("caio", matTmp);
         long long int average_x = 0, average_y = 0;
         int counter = 0;
         for (int x = 0; x <= matTmp.cols; x++) {

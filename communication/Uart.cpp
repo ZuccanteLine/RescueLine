@@ -4,14 +4,24 @@
 
 #include "Uart.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdint.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <errno.h>
+#include <sys/ioctl.h>
+
 Uart::Uart(std::string device){
     file = open(("/dev/" + device).c_str(), O_RDWR | O_NOCTTY);
     tcgetattr(file, &toptions);
 //        printf("%d\t", cfgetispeed(&toptions));
-    cfsetispeed(&toptions, B19200);
+    cfsetispeed(&toptions, B115200);
 //        printf("%d\n", cfgetispeed(&toptions));
 //        printf("%d\t", cfgetospeed(&toptions));
-    cfsetospeed(&toptions, B19200);
+    cfsetospeed(&toptions, B115200);
 //        printf("%d\n", cfgetospeed(&toptions));
 //        printf("%d\t", toptions.c_cflag);
     toptions.c_cflag &= ~PARENB;
@@ -26,8 +36,13 @@ Uart::Uart(std::string device){
     tcsetattr(file, TCSANOW, &toptions);
 }
 
-bool Uart::read(uint8_t *buffer) {
-    
+bool Uart::_read(uint8_t *buffer, int size) {
+    read(file, buffer, size);
+    return true;
+}
+
+bool Uart::_write(uint8_t *buffer, int size) {
+    write(file, buffer, size);
     return true;
 }
 

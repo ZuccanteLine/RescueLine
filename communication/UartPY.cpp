@@ -24,7 +24,7 @@ public:
         PyRun_SimpleString("import sys");
         PyRun_SimpleString("sys.path.append(\".\")");
 
-        PyObject *script = PyImport_Import(PyString_FromString("Uart"));
+        PyObject *script = PyImport_Import(PyString_FromString("UartPY"));
         PyErr_Print();
 
         PyObject *dic = PyModule_GetDict(script);
@@ -57,10 +57,17 @@ public:
     }
 
     void _write(string cmd) {
-        cout << "ardp" << cmd << endl;
-        PyTuple_SetItem(writeargs, 1, PyString_FromString(cmd.c_str()));
+
+        for(int i=0; i<9; i++) cout << (int)cmd.at(i) << "\t";
+        cout << endl;
+
+//        cout << "send: " + cmd << endl;
+        PyTuple_SetItem(writeargs, 1, PyByteArray_FromStringAndSize(cmd.c_str(), 9));
+//        cout << "sending" << endl;
         PyObject_CallObject(write, writeargs);
+//        cout << "sending" << endl;
         PyErr_Print();
+//        cout << "sent" << endl;
     }
 
 //    void lcd(string mex) {
@@ -111,5 +118,11 @@ private:
 //    }
 
 };
+
+//int main(){
+//    UartConnection uartConnection(115200, "ttyACM0");
+//    uartConnection._write("ciao");
+//    cout << uartConnection._read() << endl;
+//}
 
 #endif

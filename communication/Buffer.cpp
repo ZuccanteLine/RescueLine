@@ -68,7 +68,7 @@ void Buffer::cloneData(uint8_t *&data) {
 }
 
 void Buffer::toBuffer(uint8_t *&buffer) {
-    buffer = new uint8_t[length()];
+//    buffer = new uint8_t[length()]; //da fixare
     buffer[0] = source;
     buffer[1] = type;
     buffer[2] = dataSize;
