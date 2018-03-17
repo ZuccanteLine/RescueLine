@@ -18,6 +18,7 @@
 //#define DEBUG
 
 int main() {
+    cout << "ciao" << endl;
     cv::VideoCapture camera(CAMERA);
     cv::Mat image;
 
@@ -31,7 +32,7 @@ int main() {
     camera.set(CV_CAP_PROP_FRAME_HEIGHT,CAMERA_HEIGHT);
 
 //    lineFollower.add_analyzation_area(cv::Rect(0,0,640,480), 100);
-    lineFollower.add_analyzation_area(cv::Rect(0,360,640,120), 100);
+    lineFollower.add_analyzation_area(cv::Rect(0 ,360,640,120), 100/8);
 
     buffer.setType(Buffer::TYPE_MOTORS);
     buffer.setSource(Buffer::SOURCE_RASPBERRY);
@@ -59,6 +60,7 @@ int main() {
         lineFollower.setImage(image);
         lineFollower.process_average_black();
         buffer.setData(new uint8_t[4]{0,lineFollower.getLeft(),0,lineFollower.getRight()},4);
+//        buffer.setData(new uint8_t[4]{0,123,0,lineFollower.getRight()},4);
         buffer.toBuffer(raw_buffer);
         raw_buffer[7] = 10; // PERCHE FUNZIONA?????
         raw_buffer[8] = 0;  // RAW_BUFFER È PIU PICCOLO DI 7 ED 8
@@ -71,9 +73,10 @@ int main() {
 //        cout << "\n";
 
         uart._write(std::string((char*)raw_buffer, 9));
-//        raw_buffer = (uint8_t*)uart._read().c_str();
-//        for(int i=0; i<8; i++) cout << (int)raw_buffer[i] << "\t";
-//        cout << "\n";
+        raw_buffer = (uint8_t*)uart._read().c_str();
+        cout << "Read: ";
+        for(int i=0; i<8; i++) cout << (int)raw_buffer[i] << "\t";
+        cout << "\n";
 
         //prova1 comunicazione
         /*uart._write(raw_buffer, BUFFER_FIXED_DATA_SIZE+3);

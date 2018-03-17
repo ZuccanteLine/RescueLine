@@ -146,7 +146,9 @@ void LineFollower::process_average_black() {
 //        std::cout << tmp << "\t";
         tmp = tmp/analyzation_areas.size();
 //        std::cout << tmp << "\n";
-        right += ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
-        left += 255 - ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
+//        right += ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
+//        left += 255 - ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
+        right += tmp;
+        left += 255-tmp;
     }
 }
