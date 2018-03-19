@@ -12,9 +12,6 @@ private:
     uint8_t dataSize;
     uint8_t *data;
 
-//    static void b2buffer(char source, char type, char size, char *data, char *buffer);
-//    static Buffer B2Buffer(char *buffer);
-
 public:
     enum source_enum{SOURCE_RASPBERRY, SOURCE_ARDUINO};
     enum type_enum{TYPE_MOTORS, TYPE_IMU};
@@ -26,6 +23,7 @@ public:
     uint8_t getSource() const;
     uint8_t getType() const;
     uint8_t getDataSize() const;
+    uint8_t getHeaderSize() const;
     uint8_t length();
     void getData(uint8_t *&data);
     void cloneData(uint8_t *&data);

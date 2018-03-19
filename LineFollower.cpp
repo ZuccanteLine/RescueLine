@@ -69,7 +69,6 @@ int16_t LineFollower::getLeft() const {
 
 
 void LineFollower::process_image() {
-//    cv::Mat processed = Mat(image, rettangolo); // estrapolo solo l'area interessata
     cv::cvtColor(image, processed_image, CV_BGR2GRAY); // converto in bianco e nero
     cv::GaussianBlur(processed_image, processed_image, cv::Size(9, 9), 2, 2); // sfoco leggermente l'immagine per ridurre gli "zig e zag"
     cv::threshold(processed_image, processed_image, thresh, 255, 0); // converto tutto in bianco o nero
@@ -92,30 +91,13 @@ void LineFollower::extract_contours() {
         cv::findContours(cannied_areas.back(), contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
         all_contours.push_back(contours);
     }
-//    for(auto contours : all_contours){
-//        for(auto contour : contours){
-//
-//        }
-//    }
 }
 
-void LineFollower::process_debug1() {
-    process_image();
-    extract_contours();
-//    for(cv::Rect area : analyzation_areas){
-//        std::vector<std::vector<cv::Point>> contours;
-//        cv::Mat cannied_image(processed_image, area);
-//        cv::Canny(cannied_image, cannied_image, thresh, thresh*2, 3);
-//        cv::findContours(cannied_image, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
-//    }
-//    cv::imshow("Ciao1", processed_image);
-}
 
 void LineFollower::find_black_average() {
     average_points.clear();
     for(cv::Rect area : analyzation_areas) {
         cv::Mat matTmp = cv::Mat(processed_image, area).clone();
-//        cv::imshow("caio", matTmp);
         long long int average_x = 0, average_y = 0;
         int counter = 0;
         for (int x = 0; x <= matTmp.cols; x++) {
@@ -139,15 +121,9 @@ void LineFollower::process_average_black() {
     double tmp;
     for(int i=0; i<analyzation_areas.size(); i++){
         tmp = average_points.at(i).x;
-//        std::cout << tmp << "\t";
         tmp = (tmp/cols)*255;
-//        std::cout << tmp << "\t";
         tmp = (tmp/100)*coefficients.at(i);
-//        std::cout << tmp << "\t";
         tmp = tmp/analyzation_areas.size();
-//        std::cout << tmp << "\n";
-//        right += ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
-//        left += 255 - ((tmp)/(100*analyzation_areas.size()))*coefficients.at(i);
         right += tmp;
         left += 255-tmp;
     }

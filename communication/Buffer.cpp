@@ -2,31 +2,8 @@
 // Created by davide on 12/03/18.
 //
 
-#include <malloc.h>
 #include <cstdint>
 #include "Buffer.h"
-
-/*void Buffer::b2buffer(char source, char type, char dataSize, char *data, char *buffer) {
-    buffer = new char[3+dataSize];
-    buffer[0] = source;
-    buffer[1] = type;
-    buffer[2] = dataSize;
-    for(int i=0; i<dataSize; i++){
-        buffer[3+i] = data[i];
-    }
-}
-
-Buffer Buffer::B2Buffer(char *buffer) {
-    Buffer returnBuffer;
-    returnBuffer.source = buffer[0];
-    returnBuffer.type = buffer[1];
-    returnBuffer.dataSize = buffer[2];
-    returnBuffer.data = new char[returnBuffer.dataSize];
-    for(int i=0; i<returnBuffer.dataSize; i++){
-        returnBuffer.data[i] = buffer[3+i];
-    }
-    return Buffer();
-}*/
 
 uint8_t Buffer::getSource() const {
     return source;
@@ -68,12 +45,18 @@ void Buffer::cloneData(uint8_t *&data) {
 }
 
 void Buffer::toBuffer(uint8_t *&buffer) {
-//    buffer = new uint8_t[length()]; //da fixare
-    buffer[0] = source;
-    buffer[1] = type;
-    buffer[2] = dataSize;
-    for(int i=0; i<dataSize; i++){
-        buffer[3+i] = data[i];
+//    buffer = new uint8_t[length()]; //DA FIXARE
+    buffer = new uint8_t[length()];
+
+    int i=0;
+    buffer[i] = source;
+    i++;
+    buffer[i] = type;
+    i++;
+    buffer[i] = dataSize;
+    i++;
+    for(; i<dataSize; i++){
+        buffer[getHeaderSize()+i] = data[i];
     }
 }
 
@@ -91,9 +74,13 @@ Buffer::Buffer() {
 }
 
 uint8_t Buffer::length() {
-    return dataSize+3;
+    return getDataSize()+getHeaderSize();
 }
 
 Buffer::~Buffer() {
     delete[] data;
+}
+
+uint8_t Buffer::getHeaderSize() const {
+    return 3; //DA SISTEMARE
 }

@@ -5,8 +5,6 @@
 #ifndef RESCUELINE_UART_H
 #define RESCUELINE_UART_H
 
-#define BUFFER_FIXED_DATA_SIZE 4
-
 #include <termios.h>
 #include <printf.h>
 #include <fcntl.h>

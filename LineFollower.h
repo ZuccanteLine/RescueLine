@@ -35,19 +35,22 @@ public:
     void process_average_black();
 
     //debug
-    void process_debug1();
-    std::vector<std::vector<std::vector<cv::Point>>> get_all_contours(){
-        return all_contours;
-    }
-    cv::Mat get_processed_image(){
-        return processed_image;
-    }
-    std::vector<cv::Mat> get_cannied_areas(){
-        return cannied_areas;
-    }
-    std::vector<cv::Point> get_average_point(){
-        return average_points;
-    }
+//    void LineFollower::process_debug1() {
+//        process_image();
+//        extract_contours();
+//    }
+//    std::vector<std::vector<std::vector<cv::Point>>> get_all_contours(){
+//        return all_contours;
+//    }
+//    cv::Mat get_processed_image(){
+//        return processed_image;
+//    }
+//    std::vector<cv::Mat> get_cannied_areas(){
+//        return cannied_areas;
+//    }
+//    std::vector<cv::Point> get_average_point(){
+//        return average_points;
+//    }
 
 private:
     cv::Mat image;
